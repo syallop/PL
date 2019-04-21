@@ -1,0 +1,1 @@
+stack dot --external --no-include-base --prune="quickcheck-instances,megaparsec,parser-combinators,hspec,brick,hedgehog,vty,semigroups,random,QuickCheck,template-haskell,mtl,directory,transformers,text,fail,containers" | dot -Tpng -o dep.png

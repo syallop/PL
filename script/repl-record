@@ -1,0 +1,11 @@
+#! /bin/bash
+
+echo "Ensuring termtosvg installed"
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 install --no-cache-dir termtosvg
+
+echo "Running termtosvg. Ready?"
+read
+
+termtosvg "./output/example-$(date +%s).svg" -t solarized_light -c "stack exec pl"

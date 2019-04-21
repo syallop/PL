@@ -1,0 +1,24 @@
+[submodule "PLLabel"]
+	path = Label
+	url = https://github.com/syallop/PLLabel
+[submodule "PLPrinter"]
+	path = Printer
+	url = https://github.com/syallop/PLPrinter
+[submodule "PLParser"]
+	path = Parser
+	url = https://github.com/syallop/PLParser
+[submodule "PLGrammar"]
+	path = Grammar
+	url = https://github.com/syallop/PLGrammar
+[submodule "PLLispy"]
+	path = Lispy
+	url = https://github.com/syallop/PLLispy
+[submodule "PL"]
+	path = Core
+	url = https://github.com/syallop/PL
+[submodule "PLRepl"]
+	path = Repl
+	url = https://github.com/syallop/PLRepl
+[submodule "PLEditor"]
+	path = Editor
+	url = https://github.com/syallop/PLEditor

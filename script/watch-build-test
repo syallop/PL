@@ -1,0 +1,5 @@
+#! /bin/bash
+
+# Re-build all packages when any of them change.
+# Useful for development
+stack build --fast --file-watch --test --test-arguments="--color"
