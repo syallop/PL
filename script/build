@@ -1,3 +1,5 @@
 #! /bin/bash
 
 stack build
+
+nix-build repl/JS
