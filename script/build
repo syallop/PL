@@ -1,5 +1,6 @@
 #! /bin/bash
+set -euo pipefail
 
+echo "Build all submodules and terminal repl"
 stack build
 
-nix-build repl/JS

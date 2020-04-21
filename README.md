@@ -36,6 +36,8 @@ are:
 - [Repl](https://github.com/syallop/PLRepl): Builds the terminal UI `pl` capable
   of parsing, reducing, type-checking and printing expressions.
 
+A web repl is transpiled using GHCJS, placed under `docs/` and [hosted from this repository](http://yallop.computer/PL/repl.html).
+
 Some interesting techniques being explored across the codebase are:
 - Fix point encoding of recursive types (such as expressions and types), to allow
   defining [recursion schemes](https://en.wikipedia.org/wiki/Category:Recursion_schemes)
@@ -125,26 +127,35 @@ Some interesting techniques being explored across the codebase are:
 
 ## Build
 
-This project is developed with Haskells [stack](https://docs.haskellstack.org/en/stable/README/).
-Direct `cabal` support is untested. 
+This project is developed with Haskells [stack](https://docs.haskellstack.org/en/stable/README/) for the main dependencies and terminal interface.
+The JS repl is built with [Nix](https://nixos.org/nix/) and [GHCJS](https://github.com/ghcjs/ghcjs).
+Direct `cabal` support is untested.
 
 Clone repository with all submodules:
 ```bash
 git clone --recursive https://github.com/syallop/pl
 ```
 
-Build all submodules and their executables:
+To build all submodules and the terminal REPL (excluding the JS repl):
 ```bash
 script/build
 ```
 
+A built JS repl should be checked in under `docs/repl.html`. To rebuild:
+```bash
+script/build-js
+```
+
 ### Run local build
 
+Terminal repl:
 ```bash
 script/pl
 ```
 
-## Install
+The web interface should be accessible by pointing a web browser at `/docs/repl.html`.
+
+## Install TUI
 
 ```bash
 script/install
@@ -163,7 +174,11 @@ script/test
 ```
 
 ## Using
+### Web
+![Web REPL](https://github.com/syallop/PLRepl/blob/master/README/Web.png)
+The web interface should be accessible at `docs/repl.html`.
 
+### Terminal
 Launching the `pl` executable creates a [brick](https://hackage.haskell.org/package/brick)-based
 command line interface split into several panes.
 
@@ -172,7 +187,7 @@ command line interface split into several panes.
 - The bottom-left widget is an output text area that displays the result of parsing/ type checking code entered into the editor widget. 
 - The right widget displays a context of the types currently defined and available to be mentioned in the editor.  
 
-### Commands
+#### Commands
 
 Commands are entered by pressing keys, either a single key (such as an up
 arrow), or multiple (such as the up arrow while holding the control key).
@@ -201,7 +216,7 @@ Below is an overview of some of the commands the repl understands.
 | `ctrl + l`            | editor         | Clear all text from the editor widget |
 | `ESC`                 | global         | Exit the program |
 
-### Examples
+#### Examples
 
 Below are a couple of example functions entered into the repl.
 
