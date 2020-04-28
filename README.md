@@ -241,16 +241,16 @@ Lambdas are anonymous functions which abstract values over expressions.
 
 | Parses           | Description |
 | ---------------- | ----------- |
-| <pre><code>λFoo 0</code></pre>         | A function accepting an expression of type `Foo` and returns that expression. Types must only be annotated on the abstracted variable. Variables are referenced by an index and how many abstractions away they appear            |
-| <pre><code>λFoo (λBar 1)</code></pre> | Parentheses are used to nest expressions. This is a function accepting an expression of type `Foo` that returns a function that accepts an expression of type `Bar` and returns the first `Foo`-typed expression.      |
+| <pre><code>λBool 0</code></pre>       | A function accepting an expression of type `Bool` and returns that expression. Types must only be annotated on the abstracted variable. Variables are referenced by an index and how many abstractions away they appear            |
+| <pre><code>λBool (λNat 1)</code></pre> | Parentheses are used to nest expressions. This is a function accepting an expression of type `Bool` that returns a function that accepts an expression of type `Nat` and returns the first `Bool`-typed expression.      |
 
 #### Binding
 Refer to expressions bound by a lambda expression.
 
 | Parses           | Description |
 | ---------------- | ----------- |
-| <pre><code>0</code></pre>              | The nearest expression bound by a Lambda abstraction. I.E. Inside `λFoo 0` would refer to the expression typed `Foo`. |
-| <pre><code>1</code></pre>              | The expression not the 0th, but the first binding away. I.E. Inside `λFoo (λBar 1)` would refer to the expression typed `Foo`. |
+| <pre><code>0</code></pre>              | The nearest expression bound by a Lambda abstraction. I.E. Inside `λBool 0` would refer to the expression typed `Bool`. |
+| <pre><code>1</code></pre>              | The expression not the 0th, but the first binding away. I.E. Inside `λBool (λNat 1)` would refer to the expression typed `Bool`. |
 
 #### Function application
 Apply regular Lambdas to expressions.
@@ -258,7 +258,7 @@ Apply regular Lambdas to expressions.
 | Parses           | Description |
 | ---------------- | ----------- |
 | <pre><code>@ 0 1</code></pre>          | Apply the expression bound 0 lambdas away to the expression bound one lambda away |
-| <pre><code>@ (λFoo 0) (*) </code></pre> | Apply an identity function to the zero-product |
+| <pre><code>@ (λBool 0) (*) </code></pre> | Apply an identity function to the zero-product |
 
 #### Sum expressions
 An sum expression has an index within some larger some type, in which it is one alternative.
@@ -281,7 +281,7 @@ A union expression has a type index into some larger type, in which it is one al
 
 | Parses                | Description |
 | --------------------- | ----------- |
-| <pre><code>∪ Foo 0 Foo Bar Baz</code></pre> | A value of a Union type. The index within the greater union is the type `Foo`.  The value is `0` - a binding to an abstraction. The types that form the union are `Foo` `Bar` and `Baz`. |
+| <pre><code>∪ Bool 0 Bool Nat Unit</code></pre> | A value of a Union type. The index within the greater union is the type `Bool`.  The value is `0` - a binding to an abstraction. The types that form the union are `Bool` `Nat` and `Unit`. |
 
 #### Big Lambdas
 Big Lambdas abstract over types, but still produce expressions.
@@ -303,7 +303,7 @@ Apply Big Lambdas - which abstract over types - to types to produce an expressio
 
 | Parses                   | Description  |
 | ------------------------ | ------------ |
-| <pre><code># (Λ KIND λ(?0) 0) Foo</code></pre> | Apply the type `Foo` to a Big Lambda which takes types of kind `KIND`. |
+| <pre><code># (Λ KIND λ(?0) 0) Bool</code></pre> | Apply the type `Bool` to a Big Lambda which takes types of kind `KIND`. |
 
 ### Types
 This syntax may appear anywhere a type is expected. The same rule for expressions apply to types regarding parenthesis and whitespace.
@@ -316,7 +316,7 @@ character followed by zero or more lower case characters.
 
 | Parses               | Description |
 | -------------------- | ----------- |
-| <pre><code>Foo</code></pre>                | The type associated with the name `Foo` |
+| <pre><code>Bool</code></pre>                | The type associated with the name `Bool` |
 
 #### Arrows
 An arrow is the type of regular Lambda functions and denotes the type the
@@ -324,22 +324,22 @@ function accepts and the type of the expression produced.
 
 | Parses               | Description |
 | -------------------- | ----------- |
-| <pre><code>→ (*) Foo</code></pre>          | The type of a Lambda which binds the empty product and produces an expression with the named type `Foo` |
+| <pre><code>→ (*) Bool</code></pre>          | The type of a Lambda which binds the empty product and produces an expression with the named type `Bool` |
 
 #### Sum types
 Denotes the type of sum expressions as a left-to-right ordering of the constituent expression types.
 
 | Parses               | Description |
 | -------------------- | ----------- |
-| <pre><code>+ Foo Bar Baz</code></pre>      | The type of sum expressions that may be individually typed either `Foo`, `Bar` or `Baz` |
-| <pre><code>+ Foo Foo</code></pre>          | The type of sum expressions that may be individually one of two kinds of `Foo` |
+| <pre><code>+ Bool Nat Unit</code></pre>      | The type of sum expressions that may be individually typed either `Bool`, `Nat` or `Unit` |
+| <pre><code>+ Bool Bool</code></pre>          | The type of sum expressions that may be individually one of two kinds of `Bool` |
 
 #### Product types
 Denotes the type of product expressions as a left-to-right ordering
 
 | Parses               | Description |
 | -------------------- | ----------- |
-| <pre><code>* Foo Bar Baz</code></pre>      | The type of product expressions that are typed `Foo`, `Bar`, `Baz` in order |
+| <pre><code>* Bool Nat Unit</code></pre>      | The type of product expressions that are typed `Bool`, `Nat`, `Unit` in order |
 | <pre><code>*</code></pre>                  | The empty product type with no sub-expressions |
 
 #### Union types
@@ -347,7 +347,7 @@ The type of union expressions.
 
 | Parses               | Description |
 | -------------------- | ----------- |
-| <pre><code>∪ Foo Bar Baz</code></pre>      | The type of union expressions that may individually be either `Foo`, `Bar` or `Baz` and are indexed by type rather than order |
+| <pre><code>∪ Bool Nat Unit</code></pre>      | The type of union expressions that may individually be either `Bool`, `Nat` or `Unit` and are indexed by type rather than order |
 | <pre><code>∪</code></pre>                  | The empty union type with no alternatives. There are no values which inhabit this type |
 
 #### Big arrow
@@ -355,7 +355,7 @@ The type of big lambdas.
 
 | Parses               | Description |
 | -------------------- | ----------- |
-| <pre><code>\-> KIND Foo</code></pre>       | The type of big lambdas that accept a type with kind `KIND` and produce a value of type `Foo` |
+| <pre><code>\-> KIND Bool</code></pre>       | The type of big lambdas that accept a type with kind `KIND` and produce a value of type `Bool` |
 
 #### Type lambda
 A type level lambda corresponds is a lambda that abstracts over types to
@@ -363,7 +363,7 @@ produces types.
 
 | Parses               | Description |
 | -------------------- | ----------- |
-| <pre><code>Λ KIND Foo</code></pre>         | A type function that abstracts over a type with kind `KIND` and produces the type `Foo`. |
+| <pre><code>Λ KIND Bool</code></pre>         | A type function that abstracts over a type with kind `KIND` and produces the type `Bool`. |
 | <pre><code>Λ KIND ?0</code></pre>          | A type function that abstracts over a type with kind `KIND` and produces that type. |
 
 #### Type application
@@ -371,7 +371,7 @@ Apply a type lambda to a type to produce a type.
 
 | Parses                | Description |
 | --------------------- | ----------- |
-| <pre><code>/@ (Λ KIND ?0) Foo</code></pre>  | Apply the type `Foo` (kinded KIND) to the type lambda which returns the bound `Foo` |
+| <pre><code>/@ (Λ KIND ?0) Bool</code></pre>  | Apply the type `Bool` (kinded KIND) to the type lambda which returns the bound `Bool` |
 
 ### Case analysis
 Expressions (and _not_ types) can be pattern matched by case analysis.
@@ -436,7 +436,7 @@ union.
 
 | Parses               | Description |
 | -------------------- | ----------- |
-| <pre><code>∪ Foo ?</code></pre>            | Matches when the expression has the `Foo` type within the union. |
+| <pre><code>∪ Bool ?</code></pre>            | Matches when the expression has the `Bool` type within the union. |
 
 ## Developing
 
