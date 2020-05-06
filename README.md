@@ -227,151 +227,494 @@ Subtracting two from a natural number:
 ![Subtract Two](https://github.com/syallop/PLRepl/blob/master/README/SubTwo.svg)
 
 ## Lispy Syntax Overview
-For a full description, see the [Lispy README](https://github.com/syallop/PL/blob/master/Lispy/README.md)
+In the future a more human friendly syntax will be provided with syntax sugar
+for higher level operations, less terse constructs and likely less parenthesis!
+
+For now, a 'lispy' syntax is provided that is minimal, terse and without any
+sugar.
+
+Expressions, types and patterns are surrounded by parenthesis,
+begin with a token character and then contain zero or more space separated
+arguments. The number and types of argument can be looked up in reference syntax below.
+
+Variables are numeric indexes which count the number of abstractions away a
+variable should be bound.
+
+Built in named types begin with an upper case character.
+
+Example:
+```
+(λBool 0)
+|| |   |
+|| |   -- Second and last argument is a varible index 0
+|| -- First argument is a named type
+|--Token Lambda character
+-- Parenthesis
+```
+
+Tokens will prefer to render with unicode but have ascii alternatives.
+
+Spaces and newlines can be inserted freely without changing the meaning of an
+expression - nothing is whitespace sensitive
+
+Comments begin and end with a double quote and can span line. Semantically they
+are attached to the following node which they should describe.
+
+The above example is therefore equivalent to:
+```
+"The identity function, specialised to Booleans"
+(\ (Bool)
+   (0)
+)
+```
 
 ### Expressions
-- The following syntax may appear where an expression is expected.
-- Each expression can always contain extra surrounding parenthesis.
-- Expressions can always contain extra preceeding (and following) space without altering their parse.
-- When printing, single or no spaces are prefered. Printing currently leans towards inserting parenthesis.
-- In some cases preceeding spaces or parenthesis are required.
+This section covers the syntax for expression literals. An expression takes
+one of the following forms.
 
 #### Lambdas
 Lambdas are anonymous functions which abstract values over expressions.
 
-| Parses           | Description |
-| ---------------- | ----------- |
-| <pre><code>λBool 0</code></pre>       | A function accepting an expression of type `Bool` and returns that expression. Types must only be annotated on the abstracted variable. Variables are referenced by an index and how many abstractions away they appear            |
-| <pre><code>λBool (λNat 1)</code></pre> | Parentheses are used to nest expressions. This is a function accepting an expression of type `Bool` that returns a function that accepts an expression of type `Nat` and returns the first `Bool`-typed expression.      |
+**Examples**:
+
+An identity function specialised to Bool:
+```
+λBool 0
+```
+- Identified by the lambda token
+- Accepts a parameter of type `Bool`
+- Body is the expression `0`
+- `0` refers to the variable bound 0 lambdas away - I.E. the preceeding `λBool`
+- Return types can be infered and cannot be provided. The type of this
+  expression is `-> Bool Bool`.
+- Parenthesis are omitted as the expression can be parsed unambiguously at the
+  top level.
+
+A const function specialised to Bool and Nat:
+```
+λBool (λNat 1)
+```
+- Parenthesis are used to nest expressions.
+- Lambdas only accept a single argument. A second argument is accepted by
+  returning a second lambda in the body of the first.
+- In a higher level syntax/ language extension this might be written `\Bool Nat 1`.
+- The variable `1` refers to the outermost `λBool`.
+- The type of this expression is `-> Bool (-> Nat Bool)`
 
 #### Binding
 Refer to expressions bound by a lambda expression.
 
-| Parses           | Description |
-| ---------------- | ----------- |
-| <pre><code>0</code></pre>              | The nearest expression bound by a Lambda abstraction. I.E. Inside `λBool 0` would refer to the expression typed `Bool`. |
-| <pre><code>1</code></pre>              | The expression not the 0th, but the first binding away. I.E. Inside `λBool (λNat 1)` would refer to the expression typed `Bool`. |
+**Examples**:
 
-#### Function application
-Apply regular Lambdas to expressions.
+Closest binding:
+```
+0
+```
+- The expression bound by the nearest lambda.
+- Indexes begin at 0!
+- Not a literal 0/ natural number!
+- Are typed by the abstraction they refer to. E.G. Inside `λBool 0` would refer to the expression typed `Bool`.
 
-| Parses           | Description |
-| ---------------- | ----------- |
-| <pre><code>@ 0 1</code></pre>          | Apply the expression bound 0 lambdas away to the expression bound one lambda away |
-| <pre><code>@ (λBool 0) (*) </code></pre> | Apply an identity function to the zero-product |
-
-#### Sum expressions
-An sum expression has an index within some larger some type, in which it is one alternative.
-
-| Parses            | Description |
-| ----------------- | ----------- |
-| <pre><code>+0 (*) (*) Nat </code></pre> | A value of a sum type. The index within the greater sum is `0`. The value is `(*)` - the empty product type. The first type in the sum is `(*)` - the type of empty products. The second type in the sum is `Nat`. |
+Not the closest but the next binding:
+```
+1
+```
+- The expression bound not by the nearest lambda, but the next.
+- Indexes begin at 0!
+- In the expression `λBool (λNat 1)` would refer to the expression typed `Bool`.
 
 #### Product expressions
-A product expression combines many expressions into one where the order is fixed.
+A product expression combines many expressions into one. The size and order is fixed. I.E. they are like tuples in some languages.
 
-| Parses            | Description |
-| ----------------- | ----------- |
-| <pre><code>* 0 1 2</code></pre>         | A product of expressions bound 0, 1 and 2 abstractions away. |
-| <pre><code>(*)</code></pre>             | The empty product |
-| <pre><code>* (*) (*)</code></pre>       | A product of two empty products. |
+**Examples:**
+
+Product of three expressions:
+```
+* 0 1 2
+```
+- The product of expressions bound 0, 1 and 2 abstractions away
+- A products type mirrors its expression. E.G. If the bindings were typed `Nat`, `Bool` and `Unit` would have a type like `* Nat Bool Unit`.
+
+Empty product of no expressions:
+```
+(*)
+```
+- The empty product contains no expressions and is often enclosed in parenthesis
+  to reduce parsing ambiguities.
+- This expression is often used for token values such as Unit, Zero or the Nil
+  case in a list.
+- Is typed `(*)`.
+
+Singleton product (of empty product):
+```
+* (*)
+```
+- A product of a single value which is the empty product
+- Is typed `* (*)`
+
+#### Function application
+Apply regular Lambdas to expressions. 
+
+**Examples**:
+
+Apply the empty product to a function that returns it:
+```
+@ (λ(*) 0) (*)
+```
+- The `@` token denotes function application
+- The first argument is the function and should be built from a lambda
+- The second argument is the argument
+- The type of function and argument must be equal
+- Reduces to `*`, typed `*`
+
+Apply a binding to another:
+```
+@ 0 1
+```
+- Apply the expression bound `0` lambdas away to the expression bound `1` lambda
+  away.
+- The type of the expression depends upon the result type of `0`.
+
+#### Sum expressions
+A sum expression is an alternative within some larger type. It's position is
+indicated by it's index.
+
+**Examples:**
+
+Empty product is the zeroth expression in the sum of empty Products and Bools
+```
++0 (*) (*) Bool
+```
+- A sum expression begins with a `+` token.
+- The first argument is an index denoting the position the expression takes
+  within the overall sum.
+  - This expression is in the `0`th position.
+  - The index is required as types are allowed to appear multiple times.
+  - Indexes begin at 0.
+- The second argument is an expression, in this case the empty product `(*)`.
+- One or many arguments follow which are an ordered list of _types_ the whole
+  sum is composed of.
+  - In this case the sum contains the empty sum as its first type `(*)` and a `Bool`ean as its second type.
+- This expression is typed `+ (*) Bool` - the sum of empty products and booleans.
+- Sums may contain one or more types. 
 
 #### Union expressions
-A union expression has a type index into some larger type, in which it is one alternative. This differs from a sum type which has an order and where values are indexed by their position.
+A union expression is similar to a sum expression. The differences are that
+there may not be duplicate types and the types are unordered. This means
+indexes are types rather than numbers.
 
-| Parses                | Description |
-| --------------------- | ----------- |
-| <pre><code>∪ Bool 0 Bool Nat Unit</code></pre> | A value of a Union type. The index within the greater union is the type `Bool`.  The value is `0` - a binding to an abstraction. The types that form the union are `Bool` `Nat` and `Unit`. |
+**Examples:**
+
+A bound empty Product within a union of three types:
+```
+∪ (*) (*) Bool Nat (*)
+```
+- A union expression begins with a `U` token.
+- The first argument is a type index denoting the type the expression has within
+  the overall sum.
+  - This expression is typed `(*)` - the empty product type.
+  - Numerical indexes are not used as the types are not ordered semantically
+- The second argument is an expression `(*)` - the empty product.
+- Zero or many arguments follow which are an unordered list of unique _types_
+  the whole union is composed of.
+  - In this case the union contains `Bool`, `Nat` and the empty product `*`.
+- This expression is typed `U Bool Nat (*)` which may be written as `U Nat (*) Bool`
+  or any other equivalent permutation of types.
+- Unions may contain zero or more types.
 
 #### Big Lambdas
-Big Lambdas abstract over types, but still produce expressions.
+Big lambdas are lambdas which abstract over types to produce an expression. This
+is unlike lambdas which abstract over expressions to produce expressions (and
+Type Lambdas which abstract over types to produce types).
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>ΛKIND λ(?0) 0</code></pre>      | A function accepting a _type_ of kind `KIND` that produces a function that accepts an _expression_ with the previously bound type to produce that expression |
+**Examples:**
 
-#### Type Binding
-Refer to _types_ bound by a big lambda expression.
-
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>?0</code></pre>                 | The nearest type bound by a Big Lambda abstraction. I.E. Inside `ΛKIND (?0)` would refer to the type kinded `KIND`. |
-| <pre><code>?1</code></pre>                 | The type not the 0th, but the first binding away. I.E. Inside `ΛKINDA (ΛKINDB (?1))` would refer to the type kinded `KINDA`. |
+Identity function with a generic type:
+```
+ΛKIND (λ(?0) 0)
+```
+- The `Λ` token indicates the start of a big lambda
+  - This token can be written `/\`
+- The first argument is a _kind_ which is the type of types.
+  - Simple types will have kind `KIND`.
+  - Types which accept parameters will have kinds like `/-> KIND KIND`
+- The second argument is an expression in which the bound type will be available
+  to type bindings.
+  - Type bindings are like expression bindings. They live in a separate context
+    and are written with a preceeding `?`.
+- The first argument to the nested lambda is a type-binding to the type bound 0
+  abstractions away - I.E. the outer big lambda.
+  - This means the nested lambda will accept and value with whatever type was
+    applied.
+- The expression is typed `/-> KIND (-> ?0 ?0) I.E. it takes a type of kind
+  KIND then takes and returns an expression with that type.
 
 #### Big application
 Apply Big Lambdas - which abstract over types - to types to produce an expression.
 
-| Parses                   | Description  |
-| ------------------------ | ------------ |
-| <pre><code># (Λ KIND λ(?0) 0) Bool</code></pre> | Apply the type `Bool` to a Big Lambda which takes types of kind `KIND`. |
+**Examples:**
+
+Identity function supplied `Bool`.
+```
+ # (ΛKIND λ(?0) 0) Bool
+```
+- The '#` token indicates the start of a Big Application
+- The first argument is the function and should be built from a Big Lambda
+- The second argument is the argument and should be a _type_
+- The kind of function and argument must be equal
+- Reduces to the boolean identity function `λBool 0` typed `-> Bool Bool`.
 
 ### Types
-This syntax may appear anywhere a type is expected. The same rule for expressions apply to types regarding parenthesis and whitespace.
+This section covers the syntax for type literals. A type takes one of the following forms.
 
 #### Named
-A Named type is associated with some 'externally' defined type definition. This
-is 'external' in that the (current) expression/ type language provides no syntax
-for creating these associations. Type names are currently an upper case
-character followed by zero or more lower case characters.
+Named types are currently built-in and associate names to type definitions.
+Named types have an associated kind, may be recursive and have a definition
+which takes the form of a type.
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>Bool</code></pre>                | The type associated with the name `Bool` |
+Types are named by an upper case character followed by zero or more lower case
+characters. (`U` is an exception which is the union type).
+
+Current built in named types are:
+- `Bool`
+- `Nat`
+- `Unit`
+- `Maybe`
+- `List`
+
+Types are currently structural meaning anywhere a named type is expected, any
+value compatible with the types definition is accepted.
+
+Type definitions are displayed in `REPL`s and look like:
+
+```
+#Bool
+  NonRec
+  :: Kind
+  = +(*) (*)
+```
+- The first line is the types name (not including the `#`)
+- The second line describes whether the type is recursively defined or not.
+  - `NonRec` types can be thought of as simple aliases. They will always reduce
+    to their definition.
+  - `Rec` types are aliases that may refer to themselves in some position. They
+    will reduce more conservatively, sticking at each recursive instance to
+    avoid expanding forever.
+- The third line hints at the types `KIND`.
+  - Types with `KIND` take no type parameters
+  - Types with `-> KIND KIND` take a type of kind `KIND`.
+- The final line gives the types definition.
+
+Below are some built-in types whose definitions are elaborated in the following
+sections. 
+
+Unit:
+```
+#Unit
+  NonRec
+  :: Kind
+  = *
+```
+- Unit is non-recursive
+- It is equal to the empty product meaning expressions of type `Unit` can be
+  cosntructed with `(*)`.
+
+Booleans:
+```
+#Bool
+  NonRec
+  :: Kind
+  = +(*) (*)
+```
+- Booleans are non recursive
+- They are represented as a sum of two alternatives.
+- The 0th alternative is an empty product `(*)` which denotes 'false'
+  - False is constructed: `+0 (*) (*) (*)`
+- The 1st alternative is an empty product `(*)` which denoted 'true'
+  - True is constructed: `+1 (*) (*) (*)`
+
+Nat:
+```
+#Nat
+  Rec
+  :: Kind
+  = + (*) Nat
+```
+- Nat is the type of natural numbers
+- They are represented as the sum of two alternatives
+- The 0th alternative is an empty product `(*)` which denotes 'zero'
+  - Zero is constructed: `+0 (*) (*) Nat`
+- The 1st alternative is a recursive instance of the natural type which denotes
+  the 'successor'.
+  - One is the successor of zero and can be constructed: `+1 (+0 (*) (*) Nat) (*) Nat`
+
+```
+#Maybe
+  NonRec
+  :: -> Kind Kind
+  = ΛKIND (+(*) ?0)
+```
+- Maybe accepts a type parameter to construct expressions that may or may not be
+  present.
+- It is represented as a type function which accepts a type to produce a sum of
+  two alternatives.
+- The first alternative is an empty product `(*)` which denotes 'nothing'.
+  - Nothing of type Maybe Bool could be constructed: `+0 (*) (*) Bool`
+- The second alternative is whatever type was supplied and denotes 'just'. 
+  - Just zero of type Maybe Nat could be constructed: `+1 (+0 (*) (*) Nat) (*) Nat`
+
+#### Type Binding
+Refer to _types_ bound by a big lambda expression or a type lambda.
+
+**Examples:**
+
+The nearest bound type:
+```
+?0
+```
+
+Not the nearest but the first binding away:
+```
+?1
+```
 
 #### Arrows
 An arrow is the type of regular Lambda functions and denotes the type the
 function accepts and the type of the expression produced.
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>→ (*) Bool</code></pre>          | The type of a Lambda which binds the empty product and produces an expression with the named type `Bool` |
+**Examples:**
+
+Type of lambdas from empty Product to Bool:
+```
+→ (*) Bool
+```
+- Arrow types are identified by the first arrow token or `->`
+- The first argument is the type of the functions argument. An expression with
+  this type would abstract over the empty product type like `\(*) ...`.
+- The second argument is the result type of the function.
 
 #### Sum types
-Denotes the type of sum expressions as a left-to-right ordering of the constituent expression types.
+The type of sum expressions give the constituent types, ordered from left-to-right.
+The order is significant and will be used to construct and match on expressions.
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>+ Bool Nat Unit</code></pre>      | The type of sum expressions that may be individually typed either `Bool`, `Nat` or `Unit` |
-| <pre><code>+ Bool Bool</code></pre>          | The type of sum expressions that may be individually one of two kinds of `Bool` |
+**Examples:**
+
+Sum of three types:
+```
++ Bool Nat Unit
+```
+- A sum type begins with a `+` token
+- What follows is one or many ordered types.
+- Expressions
+
+The sum of two types:
+```
++ Bool Bool
+```
+- The sum of two distinct `Bool` types. 
 
 #### Product types
-Denotes the type of product expressions as a left-to-right ordering
+The type of product expressions give the constituent types, ordered from
+left-to-right. The order is significant and will be used to construct and match
+on expressions.
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>* Bool Nat Unit</code></pre>      | The type of product expressions that are typed `Bool`, `Nat`, `Unit` in order |
-| <pre><code>*</code></pre>                  | The empty product type with no sub-expressions |
+**Examples:**
+
+Product of three types:
+```
+* Bool Nat Unit
+```
+- The product of `Bool`, `Nat` and `Unit`.
+- Expressions of this type are constructed in sequence with values in the same
+  order.
+
+Empty Product type:
+```
+(*)
+```
+- The empty product contains no expressions and is often enclosed in parenthesis
+  to reduce parsing ambiguities.
+- This type is often used for token values such as Unit, Zero or the Nil
+  case in a list.
+
+Singleton Product type:
+```
+* Nat
+```
+- A Product of a single type Nat
+- This type is _not_ particularly useful but exists because the empty and
+  two-product _are_. 
 
 #### Union types
-The type of union expressions.
+A union type is similar to a sum type . The differences are that
+there may not be duplicate types and the types are unordered. This means
+indexes are types rather than numbers.
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>∪ Bool Nat Unit</code></pre>      | The type of union expressions that may individually be either `Bool`, `Nat` or `Unit` and are indexed by type rather than order |
-| <pre><code>∪</code></pre>                  | The empty union type with no alternatives. There are no values which inhabit this type |
+**Examples:**
 
-#### Big arrow
-The type of big lambdas.
+Union of three types:
+```
+∪ Bool Nat Unit
+```
+- The type of union expressions that may individually be either `Bool`, `Nat` or `Unit` and are indexed by type rather than order
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>\-> KIND Bool</code></pre>       | The type of big lambdas that accept a type with kind `KIND` and produce a value of type `Bool` |
+Empty union:
+```
+∪
+```
+- The empty union type with no alternatives.
 
 #### Type lambda
-A type level lambda corresponds is a lambda that abstracts over types to
-produces types.
+Type Lambdas are type-level functions or lambdas that abstract over types to
+produce types.
+They are not the type of any expression.
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>Λ KIND Bool</code></pre>         | A type function that abstracts over a type with kind `KIND` and produces the type `Bool`. |
-| <pre><code>Λ KIND ?0</code></pre>          | A type function that abstracts over a type with kind `KIND` and produces that type. |
+**Examples:**
+
+Accept a type with KIND to produce the `Bool` type:
+```
+Λ KIND Bool
+```
+- A Type Lambda begins with a `Λ` token which can also be written as `/\`
+- The first argument is the kind that the applied type must have.
+- The second argument is the body which may use type bindings to access the
+  supplied type.
+
+Identity function of types with kind KIND:
+```
+Λ KIND ?0
+```
+- This function accepts and returns any plain kinded type.
 
 #### Type application
 Apply a type lambda to a type to produce a type.
 
-| Parses                | Description |
-| --------------------- | ----------- |
-| <pre><code>/@ (Λ KIND ?0) Bool</code></pre>  | Apply the type `Bool` (kinded KIND) to the type lambda which returns the bound `Bool` |
+**Examples:**
+
+Pass `Bool` to a type identity function:
+```
+/@ (Λ KIND ?0) Bool
+```
+- Apply the type `Bool` (kinded KIND) to the type lambda, returning the bound
+  `Bool`.
+
+#### Big arrow
+The type of big lambdas which operate at the expression level, abstracting types
+to produce expressions,
+
+**Examples:**
+
+Type of expressions which take a type and produce a boolean:
+```
+\-> KIND Bool
+```
+- The type of big lambdas that accept a type with kind `KIND` and produce a value of type `Bool`
+
+
+Type of expressions which take a type then take and return values of that type: 
+```
+\-> KIND (-> ?0 ?0)
+```
 
 ### Case analysis
 Expressions (and _not_ types) can be pattern matched by case analysis.
@@ -382,21 +725,46 @@ branch. Branches have two components, the pattern they match (which may contain
 pattern bindings) and an expression in which any bindings are accessible as if
 bound by lambda abstraction.
 
-Branches are denoted by a `|` character. Abstractions are denoted by `?` character.
+Branches are denoted by a `|` character. Binds are denoted by `?` character.
 
 Example case statement:
 
-```haskell
-CASE expression ( -- Case analysis on some expression
-    (|? (0))      -- The first branch matches anything and returns it.
-    (|? (*))      -- The second branch will not be reached, but would
-    (+)           -- The default branch will not be reached but returns the empty sum
+Subtract one:
+```
+"Subtract one for naturals greater than zero"
+CASE 0 (
+    (| (+1 ?)   0)
+    (0)
 )
 ```
+- The first argument to the case statement is the scrutinee expression.
+  - In this case it is a binding to a variable zero lambdas away.
+- In the case statement `(| (+1 ?) 0)` is the first branch.
+  - `|` denotes the start of a branch
+  - The first argument `(+1 ?)` is the pattern to match
+    - `+1` matches when the scrutinee expression is the 1st alternative in a sum
+    - `?` binds the contained expression as if captured by a lambda abstraction
+  - The second argument `0` is the body expression used when the pattern `(+1 ?)` matches.
+    - Because the pattern contains a `?`, this `0` will refer to the matched expression.
+- After the first branch is a default, recognisable by it's terminating position
+  in the case body and the lack of preceeding `|`.
+  - The default body is a `0` which will refer to the same expression as the
+    scrutinee.
 
-Sums, products and unions can be pattern matched upon. Lambdas and other forms
-of expression can not. Wherever an expression is allowed within a pattern, so is
-a `?` which acts to bind that expression.
+The default branch _could_ be replaced by a branch that explicitly matches the
+'zero' case like:
+```
+    (| (+0 (*)) 0)
+```
+- Unlike the previous branch, there is no binding, only nested expressions that
+  are compared for equality.
+
+
+Sums, Products and Unions can be matched upon in patterns. Lambdas and other
+forms of expressions can not.
+
+Wherever an expression could occur in a pattern, so could a `?` which acts to
+bind it.
 
 #### Bind
 A bind matches the entire expression and binds it to be referenced as if
@@ -404,39 +772,79 @@ abstracted by a lambda. If a bind appears at the top level, the entire
 expression is bound. If it appears as a sub expression, that sub-expression is
 bound.
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>?</code></pre>                  | Match any expression value. Sums, Products, etc |
-| <pre><code>+0 ?</code></pre>               | If the sum expression is matched index 0, bind its expression |
-| <pre><code>* ? ?</code></pre>              | Match both expressions in a product expression |
+When multiple binds appear in a pattern the closest patterns are the right most.
+Nesting is resolved depth-first.
+
+**Examples:**
+
+Match any expression value. Sums, Products, etc.
+```
+?
+```
+
+Match a sum alternative:
+```
++ 0 ?
+```
+- If the sum expression is the 0th alternative, bind it's expression.
+
+Match a product:
+```
+* ? ?
+```
+- Match both expressions in a product and bind them.
 
 #### Sums
 A sum pattern matches a sum expression. The index matches the sum expressions
-alternatives left to right starting at 0.
+position within the alternative types left-to-right and starting at 0.
 
-Example parses:
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>+0 ?</code></pre>               | Matches when a sum expression is at index 0 within its sum type. |
-| <pre><code>+0 (+1 ?)</code></pre>          | Matches when a sum expression is at index 0 within its sum type and that contained expression is at index 1 within its sum type. |
+**Examples:**
+
+0th Sum alternative:
+```
++0 ?
+```
+
+1st Sum alternative:
+```
++1 ?
+```
+
+Nested sum:
+```
++0 (+1 ?)
+```
+- Matches when the outer expression is at index 0, and the nested sum is at
+  index 1.
 
 #### Products
 A product pattern matches a product expression. All contained expressions must
 match for the product to match as a whole.
 
-| Parses             | Description |
-| ------------------ | ----------- |
-| <pre><code>* ? ?</code></pre>              | Matches any two expressions within a product type |
-| <pre><code>* (+0 ?) (+1 ?)</code></pre>    | Matches only when both nested sum expression match |
+**Examples:**
+
+Match any two expressions:
+```
+* ? ?
+```
+
+Match nested sum expressions:
+```
+* (+0 ?) (+1 ?)
+```
+- Matches only when the first product is the 0th sum and the second product is
+  the 1st sum.
 
 #### Unions
-A union pattern matches a union expression. A type is used as the index into the
-union.
+A union pattern matches a union expression. Unlike a sum which matches by
+position, unions match via their type.
 
-| Parses               | Description |
-| -------------------- | ----------- |
-| <pre><code>∪ Bool ?</code></pre>            | Matches when the expression has the `Bool` type within the union. |
+Extract the Boolean expression:
+```
+∪ Bool ?
+```
+- Matches when the Union expression has the `Bool` type within the union.
 
 ## Developing
 
