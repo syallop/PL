@@ -55,7 +55,7 @@ Some interesting techniques being explored across the codebase are:
 - [DSL composition](https://github.com/syallop/DSL-Compose) for combining Operational encodings of distinct, reusable DSL
   fragments.
 
-## Overview
+# Overview
 
 - [Quick facts](#Quick-facts)
 - [Build](#Build)
@@ -92,7 +92,7 @@ Some interesting techniques being explored across the codebase are:
     - [Unions](#Unions)
 - [Developing](#Developing)
 
-## Quick-facts
+# Quick-facts
 
 - The core data-types currently consist of anonymous functions, sums, products
   and unions.
@@ -125,7 +125,7 @@ Some interesting techniques being explored across the codebase are:
 - Grammar definitions are 'reversible' meaning they encode both how a syntax
   should be parsed and an expression should be pretty-printed.
 
-## Build
+# Build
 
 This project is developed with Haskells [stack](https://docs.haskellstack.org/en/stable/README/) for the main dependencies and terminal interface.
 The JS repl is built with [Nix](https://nixos.org/nix/) and [GHCJS](https://github.com/ghcjs/ghcjs).
@@ -146,7 +146,7 @@ A built JS repl should be checked in under `docs/repl.html`. To rebuild:
 script/build-js
 ```
 
-### Run local build
+## Run local build
 
 Terminal repl:
 ```bash
@@ -155,7 +155,7 @@ script/pl
 
 The web interface should be accessible by pointing a web browser at `/docs/repl.html`.
 
-## Install TUI
+# Install TUI
 
 ```bash
 script/install
@@ -167,18 +167,18 @@ You may then start a repl by calling:
 pl
 ```
 
-### Test
+## Test
 
 ```
 script/test
 ```
 
-## Using
-### Web
+# Using
+## Web
 ![Web REPL](https://github.com/syallop/PLRepl/blob/master/README/Web.png)
 The web interface should be accessible at `docs/repl.html`.
 
-### Terminal
+## Terminal
 Launching the `pl` executable creates a [brick](https://hackage.haskell.org/package/brick)-based
 command line interface split into several panes.
 
@@ -187,7 +187,7 @@ command line interface split into several panes.
 - The bottom-left widget is an output text area that displays the result of parsing/ type checking code entered into the editor widget. 
 - The right widget displays a context of the types currently defined and available to be mentioned in the editor.  
 
-#### Commands
+### Commands
 
 Commands are entered by pressing keys, either a single key (such as an up
 arrow), or multiple (such as the up arrow while holding the control key).
@@ -216,7 +216,7 @@ Below is an overview of some of the commands the repl understands.
 | `ctrl + l`            | editor         | Clear all text from the editor widget |
 | `ESC`                 | global         | Exit the program |
 
-#### Examples
+### Examples
 
 Below are a couple of example functions entered into the repl.
 
@@ -226,7 +226,7 @@ Boolean and:
 Subtracting two from a natural number:
 ![Subtract Two](https://github.com/syallop/PLRepl/blob/master/README/SubTwo.svg)
 
-## Lispy Syntax Overview
+# Lispy Syntax Overview
 In the future a more human friendly syntax will be provided with syntax sugar
 for higher level operations, less terse constructs and likely less parenthesis!
 
@@ -268,11 +268,11 @@ The above example is therefore equivalent to:
 )
 ```
 
-### Expressions
+## Expressions
 This section covers the syntax for expression literals. An expression takes
 one of the following forms.
 
-#### Lambdas
+### Lambdas
 Lambdas are anonymous functions which abstract values over expressions.
 
 **Examples**:
@@ -301,7 +301,7 @@ A const function specialised to Bool and Nat:
 - The variable `1` refers to the outermost `λBool`.
 - The type of this expression is `-> Bool (-> Nat Bool)`
 
-#### Binding
+### Binding
 Refer to expressions bound by a lambda expression.
 
 **Examples**:
@@ -323,7 +323,7 @@ Not the closest but the next binding:
 - Indexes begin at 0!
 - In the expression `λBool (λNat 1)` would refer to the expression typed `Bool`.
 
-#### Product expressions
+### Product expressions
 A product expression combines many expressions into one. The size and order is fixed. I.E. they are like tuples in some languages.
 
 **Examples:**
@@ -352,7 +352,7 @@ Singleton product (of empty product):
 - A product of a single value which is the empty product
 - Is typed `* (*)`
 
-#### Function application
+### Function application
 Apply regular Lambdas to expressions. 
 
 **Examples**:
@@ -375,7 +375,7 @@ Apply a binding to another:
   away.
 - The type of the expression depends upon the result type of `0`.
 
-#### Sum expressions
+### Sum expressions
 A sum expression is an alternative within some larger type. It's position is
 indicated by it's index.
 
@@ -398,7 +398,7 @@ Empty product is the zeroth expression in the sum of empty Products and Bools
 - This expression is typed `+ (*) Bool` - the sum of empty products and booleans.
 - Sums may contain one or more types. 
 
-#### Union expressions
+### Union expressions
 A union expression is similar to a sum expression. The differences are that
 there may not be duplicate types and the types are unordered. This means
 indexes are types rather than numbers.
@@ -422,7 +422,7 @@ A bound empty Product within a union of three types:
   or any other equivalent permutation of types.
 - Unions may contain zero or more types.
 
-#### Big Lambdas
+### Big Lambdas
 Big lambdas are lambdas which abstract over types to produce an expression. This
 is unlike lambdas which abstract over expressions to produce expressions (and
 Type Lambdas which abstract over types to produce types).
@@ -449,7 +449,7 @@ Identity function with a generic type:
 - The expression is typed `/-> KIND (-> ?0 ?0) I.E. it takes a type of kind
   KIND then takes and returns an expression with that type.
 
-#### Big application
+### Big application
 Apply Big Lambdas - which abstract over types - to types to produce an expression.
 
 **Examples:**
@@ -464,10 +464,10 @@ Identity function supplied `Bool`.
 - The kind of function and argument must be equal
 - Reduces to the boolean identity function `λBool 0` typed `-> Bool Bool`.
 
-### Types
+## Types
 This section covers the syntax for type literals. A type takes one of the following forms.
 
-#### Named
+### Named
 Named types are currently built-in and associate names to type definitions.
 Named types have an associated kind, may be recursive and have a definition
 which takes the form of a type.
@@ -563,7 +563,7 @@ Nat:
 - The second alternative is whatever type was supplied and denotes 'just'. 
   - Just zero of type Maybe Nat could be constructed: `+1 (+0 (*) (*) Nat) (*) Nat`
 
-#### Type Binding
+### Type Binding
 Refer to _types_ bound by a big lambda expression or a type lambda.
 
 **Examples:**
@@ -578,7 +578,7 @@ Not the nearest but the first binding away:
 ?1
 ```
 
-#### Arrows
+### Arrows
 An arrow is the type of regular Lambda functions and denotes the type the
 function accepts and the type of the expression produced.
 
@@ -593,7 +593,7 @@ Type of lambdas from empty Product to Bool:
   this type would abstract over the empty product type like `\(*) ...`.
 - The second argument is the result type of the function.
 
-#### Sum types
+### Sum types
 The type of sum expressions give the constituent types, ordered from left-to-right.
 The order is significant and will be used to construct and match on expressions.
 
@@ -613,7 +613,7 @@ The sum of two types:
 ```
 - The sum of two distinct `Bool` types. 
 
-#### Product types
+### Product types
 The type of product expressions give the constituent types, ordered from
 left-to-right. The order is significant and will be used to construct and match
 on expressions.
@@ -645,7 +645,7 @@ Singleton Product type:
 - This type is _not_ particularly useful but exists because the empty and
   two-product _are_. 
 
-#### Union types
+### Union types
 A union type is similar to a sum type . The differences are that
 there may not be duplicate types and the types are unordered. This means
 indexes are types rather than numbers.
@@ -664,7 +664,7 @@ Empty union:
 ```
 - The empty union type with no alternatives.
 
-#### Type lambda
+### Type lambda
 Type Lambdas are type-level functions or lambdas that abstract over types to
 produce types.
 They are not the type of any expression.
@@ -686,7 +686,7 @@ Identity function of types with kind KIND:
 ```
 - This function accepts and returns any plain kinded type.
 
-#### Type application
+### Type application
 Apply a type lambda to a type to produce a type.
 
 **Examples:**
@@ -698,7 +698,7 @@ Pass `Bool` to a type identity function:
 - Apply the type `Bool` (kinded KIND) to the type lambda, returning the bound
   `Bool`.
 
-#### Big arrow
+### Big arrow
 The type of big lambdas which operate at the expression level, abstracting types
 to produce expressions,
 
@@ -716,7 +716,7 @@ Type of expressions which take a type then take and return values of that type:
 \-> KIND (-> ?0 ?0)
 ```
 
-### Case analysis
+## Case analysis
 Expressions (and _not_ types) can be pattern matched by case analysis.
 
 An entire case statement starts with "CASE" followed by a scrutinee expression then the
@@ -766,7 +766,7 @@ forms of expressions can not.
 Wherever an expression could occur in a pattern, so could a `?` which acts to
 bind it.
 
-#### Bind
+### Bind
 A bind matches the entire expression and binds it to be referenced as if
 abstracted by a lambda. If a bind appears at the top level, the entire
 expression is bound. If it appears as a sub expression, that sub-expression is
@@ -794,7 +794,7 @@ Match a product:
 ```
 - Match both expressions in a product and bind them.
 
-#### Sums
+### Sums
 A sum pattern matches a sum expression. The index matches the sum expressions
 position within the alternative types left-to-right and starting at 0.
 
@@ -818,7 +818,7 @@ Nested sum:
 - Matches when the outer expression is at index 0, and the nested sum is at
   index 1.
 
-#### Products
+### Products
 A product pattern matches a product expression. All contained expressions must
 match for the product to match as a whole.
 
@@ -836,7 +836,7 @@ Match nested sum expressions:
 - Matches only when the first product is the 0th sum and the second product is
   the 1st sum.
 
-#### Unions
+### Unions
 A union pattern matches a union expression. Unlike a sum which matches by
 position, unions match via their type.
 
@@ -846,7 +846,7 @@ Extract the Boolean expression:
 ```
 - Matches when the Union expression has the `Bool` type within the union.
 
-## Developing
+# Developing
 
 Several of the projects offshoot dependencies are potentially useful by
 themselves and exist as separate git repositories tied together here by git
