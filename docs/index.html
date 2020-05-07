@@ -1,3 +1,4 @@
+
 <html>
   <head>
     <script language="javascript" src="rts.js"></script>
@@ -5,8 +6,7 @@
     <script language="javascript" src="out.js"></script>
 
   <style>
-    /* Top level repl UI
-    */
+    /* Top level repl UI */
     #ui {
       display: flex;
       flex-wrap: wrap;
@@ -79,45 +79,224 @@
       word-wrap: break-word;
     }
 
+    /* Cheatsheet */
+
+    #cheatsheet {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-between;
+      min-height: 100%;
+      border-style: solid;
+    }
+
+      #naming {
+        display: flex;
+        flex-direction: column;
+
+        flex: 1;
+        width: 50%;
+
+        margin: 2%;
+      }
+
+        #names {
+        }
+
+        #bindings {
+        }
+
+        #comments{
+        }
+
+      #data-types{
+        display: flex;
+        flex-direction: column;
+
+        flex: 1;
+        width: 50%;
+
+        margin: 2%;
+      }
+
+        #products{
+        }
+
+        #sums{
+        }
+
+        #unions{
+        }
+
+      #functions{
+        display: flex;
+        flex-direction: column;
+
+        flex: 1;
+        width: 50%;
+
+        margin: 2%;
+      }
+        #abstractions{
+        }
+
+        #applications{
+        }
+
   </style>
   </head>
   <body>
+    <h1>PL Repl</h1>
+    <p>For an overview of what this project is, see the project <a href="https://github.com/syallop/PL">README</a>
+    </p>
+
+    <p><b>TL;DR:</b> The REPL embedded below allows parsing, type-checking and reducing a typed lambda calculus with Sums, Products, Unions and Anonymous functions at both the expression and type level.
+    Variables are referenced by how far away they were bound (rather than names) and while there are built in named types (Nat, Bool, Maybe, etc) users cannot currently assign names.
+    Typing is structural and so expressions of a named type can be constructed from the constituent Products, Sums, etc.
+    </p>
+
+    <p>Consult the <a href="https://github.com/syallop/PL#Lispy-Syntax-Overview">Syntax reference</a> for elaboration of the syntax of expressions, types and patterns</p>
     <ul>
-      <li>For an overview see the project <a href="https://github.com/syallop/PL">README</a></li>
-      <li><a href="https://github.com/syallop/PL#Lispy-Syntax-Overview">Syntax reference</a>
-        <ul>
-          <li><a href="https://github.com/syallop/PL#expressions">Expressions</a>:
-            <a href="https://github.com/syallop/PL#lambdas">Lambdas</a>,
-            <a href="https://github.com/syallop/PL#binding">Variable Bindings</a>,
-            <a href="https://github.com/syallop/PL#product-expressions">Products</a>,
-            <a href="https://github.com/syallop/PL#function-application">Function Application</a>,
-            <a href="https://github.com/syallop/PL#sum-expressions">Sums</a>,
-            <a href="https://github.com/syallop/PL#union-expressions">Unions</a>,
-            <a href="https://github.com/syallop/PL#big-lambdas">Big Lambdas</a>,
-            <a href="https://github.com/syallop/PL#big-application">Big Application</a>
-          </li>
-          <li><a href="https://github.com/syallop/PL#types">Types</a>:
-            <a href="https://github.com/syallop/PL#named">Named</a>,
-            <a href="https://github.com/syallop/PL#type-binding">Type Variable Bindings</a>,
-            <a href="https://github.com/syallop/PL#arrows">Arrows</a>,
-            <a href="https://github.com/syallop/PL#sum-types">Sums</a>,
-            <a href="https://github.com/syallop/PL#product-types">Products</a>,
-            <a href="https://github.com/syallop/PL#union-types">Unions</a>,
-            <a href="https://github.com/syallop/PL#type-lambda">Type Lambdas</a>,
-            <a href="https://github.com/syallop/PL#type-application">Type Application</a>,
-            <a href="https://github.com/syallop/PL#big-arrow">Big Arrows</a>
-          </li>
-          <li><a href="https://github.com/syallop/PL#case-analysis">Case analysis and Patterns</a>:
-            <a href="https://github.com/syallop/PL#bind">Bind</a>,
-            <a href="https://github.com/syallop/PL#sums">Sums</a>,
-            <a href="https://github.com/syallop/PL#products">Products</a>,
-            <a href="https://github.com/syallop/PL#unions">Unions</a>
-          </li>
-        </ul>
-      </li>
-      <li>To interpret the type context, consult the documentation for <a href="https://github.com/syallop/PL#named">Named Types</a></li>
-      <li>An experimental Web REPL is <a href="http://yallop.computer/PL/repl.html">available</a> and embedded below.
+        <li><a href="https://github.com/syallop/PL#expressions">Expressions</a>:
+          <a href="https://github.com/syallop/PL#lambdas">Lambdas</a>,
+          <a href="https://github.com/syallop/PL#binding">Variable Bindings</a>,
+          <a href="https://github.com/syallop/PL#product-expressions">Products</a>,
+          <a href="https://github.com/syallop/PL#function-application">Function Application</a>,
+          <a href="https://github.com/syallop/PL#sum-expressions">Sums</a>,
+          <a href="https://github.com/syallop/PL#union-expressions">Unions</a>,
+          <a href="https://github.com/syallop/PL#big-lambdas">Big Lambdas</a>,
+          <a href="https://github.com/syallop/PL#big-application">Big Application</a>
+        </li>
+        <li><a href="https://github.com/syallop/PL#types">Types</a>:
+          <a href="https://github.com/syallop/PL#named">Named</a>,
+          <a href="https://github.com/syallop/PL#type-binding">Type Variable Bindings</a>,
+          <a href="https://github.com/syallop/PL#arrows">Arrows</a>,
+          <a href="https://github.com/syallop/PL#sum-types">Sums</a>,
+          <a href="https://github.com/syallop/PL#product-types">Products</a>,
+          <a href="https://github.com/syallop/PL#union-types">Unions</a>,
+          <a href="https://github.com/syallop/PL#type-lambda">Type Lambdas</a>,
+          <a href="https://github.com/syallop/PL#type-application">Type Application</a>,
+          <a href="https://github.com/syallop/PL#big-arrow">Big Arrows</a>
+        </li>
+        <li><a href="https://github.com/syallop/PL#case-analysis">Case analysis and Patterns</a>:
+          <a href="https://github.com/syallop/PL#bind">Bind</a>,
+          <a href="https://github.com/syallop/PL#sums">Sums</a>,
+          <a href="https://github.com/syallop/PL#products">Products</a>,
+          <a href="https://github.com/syallop/PL#unions">Unions</a>
+        </li>
     </ul>
+    <p>To interpret the type context, consult the documentation for <a href="https://github.com/syallop/PL#named">Named Types</a></p>
+    <p>To see some examples, mash the <code>Random expression</code> button</p>
+    <div id="repl"></div>
     <script language="javascript" src="runmain.js" defer></script>
+
+    <div id="cheatsheet">
+      <h1>Cheatsheet</h1>
+      <div id="naming">
+        <h2>Naming</h2>
+        <div id="names">
+          <h3>Names</h3>
+          <ul>
+            <li>Types are named with an uppercase first character like <code>Bool</code></li>
+            <li>Names are currently built in - you cannot assign them. Sorry. </li>
+            <li>See the Type Context for Name definitions written after the <code>=</code> in type syntax</li>
+            <li>Names are structural - conforming expressions are compatible with a type name automatically</li>
+          </ul>
+        </div>
+        <div id="bindings">
+          <h3>Bindings</h3>
+          <ul>
+            <li>Bindings are numbers which count the number of abstractions away something was bound</li>
+            <li>Expressions are referenced with numbers like <code>0</code>,<code>1</code> etc rather than variable names <code>x</code>,<code>y</code> etc. </li>
+            <li>Types are referenced like expressions but with a preceeding <code>?</code> like <code>?0</code>, <code>?1</code> rather than type variables like <code>T</code>,<code>A</code> etc. </li>
+          </ul>
+        </div>
+
+        <div id="comments">
+          <h3>Comments</h3>
+          <ul>
+            <li>Enclosed in <code>"quotes"</code> and may span across lines</li>
+            <li>Are attached to the following expression, type or pattern</li>
+            <li>Can be used to give informal names to blocks of code <code>"Boolean and" λBool (\Bool ...)</code></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div id="data-types">
+        <h2>Data Types</h2>
+        <div id="products">
+          <h3>Products</h3>
+          <ul>
+            <li>Combine multiple expressions into one - like n-tuples</li>
+            <li>Expression: <code>* EXPR EXPR</code></li>
+            <li>Typed: <code>* TYPE TYPE</code></li>
+            <li>Pattern: <code>* PATTERN PATTERN</code>
+            <li><code>(*)</code> is the empty product. Singleton products are allowed.</li>
+          </ul>
+        </div>
+
+        <div id="sums">
+          <h3>Sums</h3>
+          <ul>
+            <li>Combine expressions into ordered alternatives - like tagged enums/ the either type</li>
+            <li>Indexed numerically by their (left-to-right) position in the sum</li>
+            <li>Duplicate types permitted</li>
+            <li>Expression: <code>+ INDEX EXPR TYPE...</code></li>
+            <li>Typed: <code>+ TYPE TYPE</code></li>
+            <li>Pattern: <code>+ INDEX PATTERN</code>
+          </ul>
+        </div>
+
+        <div id="unions">
+          <h3>Unions</h3>
+          <ul>
+            <li>Combine expressions into unordered alternatives with unique types</li>
+            <li>Expressions are indexed by their type in the union</li>
+            <li>Expression: <code>U TYPE EXPR TYPE...</code></li>
+            <li>Typed: <code>U TYPE...</code></li>
+            <li>Pattern: <code>U TYPE EXPR</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="functions">
+        <h2>Functions</h2>
+        <div id="abstractions">
+          <h3>Abstractions</h3>
+          <ul>
+            <li>Abstractions are unnamed. Bindings will refer to them by distance</li>
+            <li>Lambdas are anonymous functions which abstract expression inside each other</li>
+            <ul>
+              <li>Expression:<code>λTYPE EXPR</code></li>
+              <li>Typed: <code>-&gt TYPE TYPE</code></li>
+            </ul>
+            <li>Big Lambdas abstract types inside expressions</li>
+            <ul>
+              <li>Expression: <code>ΛKIND EXPR</code></li>
+              <li>Typed: <code></code></li>
+            </ul>
+            <li>Type Lambdas abstract types inside types</li>
+            <ul>
+              <li>Type: <code>ΛKIND TYPE</code></li>
+              <li>Kinded: <code>-&gtKIND KIND</code></li>
+            </ul>
+          </ul>
+        </div>
+
+        <div id="sums">
+          <h3>Applications</h3>
+          <ul>
+            <li>Applications supply values to Abstractions</li>
+            <li>Lambda application is performed with <code>@</code> like: <code>@ EXPR EXPR</code></li>
+            <li>Big application is performed with <code>#</code> like: <code># EXPR TYPE</code></li>
+            <li>Type application is performed with <code>#</code> like: <code># TYPE TYPE</code></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
   </body>
+
 </html>

@@ -36,7 +36,7 @@ are:
 - [Repl](https://github.com/syallop/PLRepl): Builds the terminal UI `pl` capable
   of parsing, reducing, type-checking and printing expressions.
 
-A web repl is transpiled using GHCJS, placed under `docs/` and [hosted from this repository](http://yallop.computer/PL/repl.html).
+A web repl is transpiled using GHCJS, placed under `docs/` and [hosted from this repository](http://yallop.computer/PL).
 
 Some interesting techniques being explored across the codebase are:
 - Fix point encoding of recursive types (such as expressions and types), to allow
@@ -141,7 +141,7 @@ To build all submodules and the terminal REPL (excluding the JS repl):
 script/build
 ```
 
-A built JS repl should be checked in under `docs/repl.html`. To rebuild:
+A built JS repl should be checked in under `docs/index.html`. To rebuild:
 ```bash
 script/build-js
 ```
@@ -153,7 +153,7 @@ Terminal repl:
 script/pl
 ```
 
-The web interface should be accessible by pointing a web browser at `/docs/repl.html`.
+The web interface should be accessible by pointing a web browser at `/docs/index.html`.
 
 # Install TUI
 
@@ -175,8 +175,8 @@ script/test
 
 # Using
 ## Web
-![Web REPL](https://github.com/syallop/PLRepl/blob/master/README/Web.png)
-The web interface should be accessible at `docs/repl.html`.
+[![Web REPL](https://github.com/syallop/PLRepl/blob/master/README/Web.png)](http://yallop.computer/PL)
+The web interface should be accessible locally at `docs/index.html`. A version is [hosted here](http://yallop.computer/PL).
 
 ## Terminal
 Launching the `pl` executable creates a [brick](https://hackage.haskell.org/package/brick)-based
