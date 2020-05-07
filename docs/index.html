@@ -5,6 +5,46 @@
     <script language="javascript" src="out.js"></script>
 
   <style>
+    /* Top level repl UI
+    */
+    #ui {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-between;
+      min-height: 100%;
+      border-style: solid;
+    }
+
+    /* Left column of ui containing editor and output */
+    #io-widgets {
+      display: flex;
+      flex-direction: column;
+
+      flex: 1;
+      width: 50%;
+
+      margin: 2%;
+    }
+
+    /* Editor input box and controls such as input buttons */
+    #editor-form {
+    }
+
+    /* Contain editor text area and headings */
+    #editor {
+    }
+
+    /* Text area for editor input */
+    #editor-input {
+      width: 100%;
+    }
+
+    /* Contain output heading and output area */
+    #output {
+    }
+
+    /* Output area containing output text */
     #output-text pre {
       overflow-x: auto;
       white-space: pre-wrap;
@@ -13,6 +53,32 @@
       white-space: -o-pre-wrap;
       word-wrap: break-word;
     }
+
+    /* Right column of ui containing type context and usage */
+    #context-widgets {
+      flex: 1;
+      width: 50%;
+
+      margin: 2%;
+    }
+
+    /* Contain type context heading and types */
+    #type-ctx {
+    }
+
+    /* Contain usage text */
+    #usage {
+    }
+
+    #usage pre {
+      overflow-x: auto;
+      white-space: pre-wrap;
+      white-space: -moz-pre-wrap;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+      word-wrap: break-word;
+    }
+
   </style>
   </head>
   <body>
