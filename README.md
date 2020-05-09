@@ -488,12 +488,12 @@ value compatible with the types definition is accepted.
 Type definitions are displayed in `REPL`s and look like:
 
 ```
-#Bool
+Bool
   NonRec
   :: Kind
   = +(*) (*)
 ```
-- The first line is the types name (not including the `#`)
+- The first line is the types name
 - The second line describes whether the type is recursively defined or not.
   - `NonRec` types can be thought of as simple aliases. They will always reduce
     to their definition.
@@ -510,7 +510,7 @@ sections.
 
 Unit:
 ```
-#Unit
+Unit
   NonRec
   :: Kind
   = *
@@ -521,7 +521,7 @@ Unit:
 
 Booleans:
 ```
-#Bool
+Bool
   NonRec
   :: Kind
   = +(*) (*)
@@ -535,7 +535,7 @@ Booleans:
 
 Nat:
 ```
-#Nat
+Nat
   Rec
   :: Kind
   = + (*) Nat
@@ -549,7 +549,7 @@ Nat:
   - One is the successor of zero and can be constructed: `+1 (+0 (*) (*) Nat) (*) Nat`
 
 ```
-#Maybe
+Maybe
   NonRec
   :: -> Kind Kind
   = ΛKIND (+(*) ?0)
