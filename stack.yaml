@@ -25,6 +25,7 @@ extra-deps:
 - pretty-tree-0.1.0.0@sha256:49b0e17008f9d30328db2bcc2958f3a7b78d154d2335c2dbaa2073e237b524ae
 - base58-bytestring-0.1.0@sha256:a1da72ee89d5450bac1c792d9fcbe95ed7154ab7246f2172b57bd4fd9b5eab79,1913
 - hashing-0.1.0.1@sha256:98861f16791946cdf28e3c7a6ee9ac8b72d546d6e33c569c7087ef18253294e7,2816
+- filepath-bytestring-1.4.2.1.6@sha256:77e1c914b11da3c8b8df61e43a457339dd86dbc4c0ec86973ba178057bfe4fa2,2493
 allow-newer: true
 extra-package-dbs: []
 

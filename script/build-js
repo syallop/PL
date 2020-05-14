@@ -5,9 +5,9 @@ echo "Build web repl"
 nix-build Repl/JS
 
 echo "Copy web repl to docs/"
-cp result/bin/client.jsexe/index.html docs/repl.html
-cp result/bin/client.jsexe/rts.js docs/rts.js
-cp result/bin/client.jsexe/lib.js docs/lib.js
-cp result/bin/client.jsexe/out.js docs/out.js
-cp result/bin/client.jsexe/runmain.js docs/runmain.js
+cp -f result/bin/client.jsexe/index.html docs/repl.html
+cp -f result/bin/client.jsexe/rts.js docs/rts.js
+cp -f result/bin/client.jsexe/lib.js docs/lib.js
+cp -f result/bin/client.jsexe/out.js docs/out.js
+cp -f result/bin/client.jsexe/runmain.js docs/runmain.js
 
