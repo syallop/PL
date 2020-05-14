@@ -3812,6 +3812,15 @@ function h$rand() {
 function h$stg_sig_install(sigNo, actionCode, sigSet_d, sigSet_o) {
   return 0;
 }
+function h$mkdir(dir_d, dir_o, mode) {
+  if(h$isNode) {
+    return h$handleErrno(-1, function() {
+      h$fs.mkdirSync(h$decodeUtf8z(dir_d, dir_o), mode);
+      return 0;
+     });
+  } else
+    return h$unsupported(-1);
+}
 function h$get_current_timezone_seconds(t, pdst_v, pdst_o, pname_v, pname_o) {
     var d = new Date(t * 1000);
     var now = new Date();
