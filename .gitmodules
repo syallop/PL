@@ -13,9 +13,9 @@
 [submodule "PLLispy"]
 	path = Lispy
 	url = https://github.com/syallop/PLLispy
-[submodule "PL"]
+[submodule "PLCore"]
 	path = Core
-	url = https://github.com/syallop/PL
+	url = https://github.com/syallop/PLCore
 [submodule "PLRepl"]
 	path = Repl
 	url = https://github.com/syallop/PLRepl
