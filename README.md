@@ -6,12 +6,18 @@ which is slowly evolving according to my whims.
 It is currently a [structurally typed](https://en.wikipedia.org/wiki/Structural_type_system)
 [functional](https://en.wikipedia.org/wiki/Functional_programming) programming language with
 anonymous functions, [sums](https://en.wikipedia.org/wiki/Tagged_union),
-[products](https://en.wikipedia.org/wiki/Product_type) and [unions](https://en.wikipedia.org/wiki/Union_type). Types may be passed at the
-expression level and type functions may exist at the type level. A terminal UI
-[REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)
-exists to parse, reduce, type-check and print expressions.
+[products](https://en.wikipedia.org/wiki/Product_type) and [unions](https://en.wikipedia.org/wiki/Union_type).
+Types may be passed at the expression level and type functions may exist at the type level.
+Variables are referenced by counting how far away they were bound.
+Expressions and types may be referenced by unambiguous hash prefixes of their
+content.
 
-It aspires to one day be:
+A terminal UI [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)
+exists to parse, reduce, type-check, evaluate and print expressions.
+
+There is also a JavaScript-transpiled [hosted REPL](https://yallop.computer/PL).
+
+It aspires to be:
 - [total](https://en.wikipedia.org/wiki/Total_functional_programming): All computations must terminate or make 'progress'
 - [mobile](https://en.wikipedia.org/wiki/Code_mobility): Code can be transparently moved to new locations
 - [content-addressable](https://en.wikipedia.org/wiki/Content-addressable_storage): Code is immutable and identified by it's SHA rather than a moving name
@@ -106,6 +112,9 @@ Some interesting techniques being explored across the codebase are:
 
 - Variables are referenced by counting how far away the function providing them
   appeared - they use De Bruijn indices.
+
+- Expressions and types may be referenced by the hash of their content. These
+  hashes can be shortened as long as they are unambiguous.
 
 - Case analysis must cover all cases and may do so by using a default value.
 

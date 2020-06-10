@@ -100,6 +100,9 @@
         margin: 2%;
       }
 
+        #content-addressed-names {
+        }
+
         #type-names {
         }
 
@@ -154,7 +157,9 @@
     </p>
 
     <p><b>TL;DR:</b> The REPL embedded below allows parsing, type-checking and reducing a typed lambda calculus with Sums, Products, Unions and Anonymous functions at both the expression and type level.
-    Variables are referenced by how far away they were bound (rather than names) and while there are built in named types (Nat, Bool, Maybe, etc) users cannot currently assign names.
+    Variables are referenced by how far away they were bound (rather than names)
+    and while there are built in named types (Nat, Bool, Maybe, etc) users
+    cannot currently assign names. Expressions and types can be referred to by unambiguous hashes of their content.
     Typing is structural and so expressions of a named type can be constructed from the constituent Products, Sums, etc.
     </p>
 
@@ -197,20 +202,22 @@
       <h1>Cheatsheet</h1>
       <div id="naming">
         <h2>Naming</h2>
-        <div id="type-names">
-          <h3>Type names</h3>
+        <div id="content-addressed-names">
+          <h3>Content Addressed</h3>
           <ul>
-            <li>Types are named with an uppercase first character like <code>Bool</code></li>
-            <li>Names are currently built in - you cannot assign them. Sorry. </li>
-            <li>See the Type Context for Name definitions written after the <code>=</code> in type syntax</li>
-            <li>Names are structural - conforming expressions are compatible with a type name automatically</li>
+            <li>Expressions and Types can be referenced by the hash of their contents like <code>#sha512/LONGHASH</code></li>
+            <li>Shorter hashes can be used when unambiguous, like <code>#LO</code></li>
+            <li>Content Addresses are returned when expressions are successfully entered</li>
           </ul>
         </div>
 
-        <div id="expr-names">
-          <h3>Expr names</h3>
+        <div id="type-names">
+          <h3>Type Names</h3>
           <ul>
-            <li>Expressions can be referenced by their full hash like <code>#sha512/LONGHASH</code></li>
+            <li>Types can be named with an uppercase first character like <code>Bool</code></li>
+            <li>Names are currently built in - you cannot assign them. Sorry. </li>
+            <li>See the Type Context for Name definitions written after the <code>=</code> in type syntax</li>
+            <li>Names are structural - conforming expressions are compatible with a type name automatically</li>
           </ul>
         </div>
 
