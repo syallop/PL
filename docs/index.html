@@ -156,11 +156,18 @@
     <p>For an overview of what this project is, see the project <a href="https://github.com/syallop/PL">README</a>
     </p>
 
-    <p><b>TL;DR:</b> The REPL embedded below allows parsing, type-checking and reducing a typed lambda calculus with Sums, Products, Unions and Anonymous functions at both the expression and type level.
+    <p><b>TL;DR:</b> The REPL embedded below allows parsing, type-checking and
+    reducing a typed lambda calculus with Sums, Products, Unions, anonymous
+    Recursive Types and Functions at both the Expression and Type level.
+
     Variables are referenced by how far away they were bound (rather than names)
-    and while there are built in named types (Nat, Bool, Maybe, etc) users
-    cannot currently assign names. Expressions and types can be referred to by unambiguous hashes of their content.
-    Typing is structural and so expressions of a named type can be constructed from the constituent Products, Sums, etc.
+    and while there are built in Named types (Nat, Bool, Maybe, etc) users
+    cannot currently assign names. Anonymous types can be used to define
+    compatible recursive types.
+
+    Expressions and types can be referred to by unambiguous hashes of their content.
+
+    Typing is structural and so expressions of a named/ recursive type can be constructed from the constituent Products, Sums, etc.
     </p>
 
     <p>Consult the <a href="https://github.com/syallop/PL#Lispy-Syntax-Overview">Syntax reference</a> for elaboration of the syntax of expressions, types and patterns</p>
@@ -274,6 +281,16 @@
             <li>Expression: <code>U TYPE EXPR TYPE...</code></li>
             <li>Typed: <code>U TYPE...</code></li>
             <li>Pattern: <code>U TYPE EXPR</code></li>
+          </ul>
+        </div>
+
+        <div id="self-types">
+          <h3>Recursive Self-Types</h3>
+          <ul>
+            <li>Wrap a type with an anonymous name like: <code>μKIND TYPE</code></li>
+            <li>Refer to self with <code>%</code></li>
+            <li>Construct/ match against the definition to construct/ match the Self-Type</li>
+            <li>Nat and List are named examples in the type context</li>
           </ul>
         </div>
       </div>

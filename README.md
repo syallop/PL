@@ -5,7 +5,7 @@ which is slowly evolving according to my whims.
 
 It is currently a [structurally typed](https://en.wikipedia.org/wiki/Structural_type_system)
 [functional](https://en.wikipedia.org/wiki/Functional_programming) programming language with
-anonymous functions, [sums](https://en.wikipedia.org/wiki/Tagged_union),
+anonymous functions and recursive types, [sums](https://en.wikipedia.org/wiki/Tagged_union),
 [products](https://en.wikipedia.org/wiki/Product_type) and [unions](https://en.wikipedia.org/wiki/Union_type).
 Types may be passed at the expression level and type functions may exist at the type level.
 Variables are referenced by counting how far away they were bound.
@@ -84,6 +84,8 @@ Some interesting techniques being explored across the codebase are:
     - [Big application](#Big-application)
   - [Types](#Types)
     - [Named](#Named)
+    - [Recursive Mu types](#Recursive-Mu-Types)
+    - [Self Bindings](#Self-Bindings)
     - [Arrows](#Arrows)
     - [Sum types](#Sum-types)
     - [Product types](#Product-types)
@@ -105,6 +107,8 @@ Some interesting techniques being explored across the codebase are:
 
 - Types are structural by default. I.E. if two types have the same structure,
   they can be used interchangeably.
+
+- Anonymous types can be defined which refer to themselves.
 
 - Functions may accept types to produce values.
 
@@ -477,9 +481,8 @@ Identity function supplied `Bool`.
 This section covers the syntax for type literals. A type takes one of the following forms.
 
 ### Named
-Named types are currently built-in and associate names to type definitions.
-Named types have an associated kind, may be recursive and have a definition
-which takes the form of a type.
+Named types are currently built-in and associate names to types.
+Named types may be recursive by using Mu-Types.
 
 Types are named by an upper case character followed by zero or more lower case
 characters. (`U` is an exception which is the union type).
@@ -498,21 +501,10 @@ Type definitions are displayed in `REPL`s and look like:
 
 ```
 Bool
-  NonRec
-  :: Kind
-  = +(*) (*)
+  +(*) (*)
 ```
 - The first line is the types name
-- The second line describes whether the type is recursively defined or not.
-  - `NonRec` types can be thought of as simple aliases. They will always reduce
-    to their definition.
-  - `Rec` types are aliases that may refer to themselves in some position. They
-    will reduce more conservatively, sticking at each recursive instance to
-    avoid expanding forever.
-- The third line hints at the types `KIND`.
-  - Types with `KIND` take no type parameters
-  - Types with `-> KIND KIND` take a type of kind `KIND`.
-- The final line gives the types definition.
+- The second line gives the types definition.
 
 Below are some built-in types whose definitions are elaborated in the following
 sections. 
@@ -520,57 +512,87 @@ sections.
 Unit:
 ```
 Unit
-  NonRec
-  :: Kind
   = *
 ```
-- Unit is non-recursive
+- Unit has a single value with no data.
 - It is equal to the empty product meaning expressions of type `Unit` can be
   cosntructed with `(*)`.
 
 Booleans:
 ```
 Bool
-  NonRec
-  :: Kind
-  = +(*) (*)
+  +(*) (*)
 ```
-- Booleans are non recursive
+- Booleans are alternatives of false or true.
 - They are represented as a sum of two alternatives.
 - The 0th alternative is an empty product `(*)` which denotes 'false'
   - False is constructed: `+0 (*) (*) (*)`
 - The 1st alternative is an empty product `(*)` which denoted 'true'
   - True is constructed: `+1 (*) (*) (*)`
 
-Nat:
-```
-Nat
-  Rec
-  :: Kind
-  = + (*) Nat
-```
-- Nat is the type of natural numbers
-- They are represented as the sum of two alternatives
-- The 0th alternative is an empty product `(*)` which denotes 'zero'
-  - Zero is constructed: `+0 (*) (*) Nat`
-- The 1st alternative is a recursive instance of the natural type which denotes
-  the 'successor'.
-  - One is the successor of zero and can be constructed: `+1 (+0 (*) (*) Nat) (*) Nat`
-
 ```
 Maybe
-  NonRec
-  :: -> Kind Kind
-  = ΛKIND (+(*) ?0)
+  Λ(KIND) (+(*) ?0)
 ```
-- Maybe accepts a type parameter to construct expressions that may or may not be
-  present.
+- Maybe is the optionality type. It's values are either Nothing or Just
+  something.
 - It is represented as a type function which accepts a type to produce a sum of
   two alternatives.
 - The first alternative is an empty product `(*)` which denotes 'nothing'.
   - Nothing of type Maybe Bool could be constructed: `+0 (*) (*) Bool`
 - The second alternative is whatever type was supplied and denotes 'just'. 
   - Just zero of type Maybe Nat could be constructed: `+1 (+0 (*) (*) Nat) (*) Nat`
+
+Nat:
+```
+Nat
+  μKIND (+(*) %)
+```
+- Nat is the type of natural numbers
+- Nat is recursive and binds itself with `μ`, refering to itself with `%`.
+- It is represented as the sum of two alternatives
+- The 0th alternative is an empty product `(*)` which denotes 'zero'
+  - Zero is constructed: `+0 (*) (*) Nat`
+- The 1st alternative is a recursive instance of the natural type which denotes
+  the 'successor'.
+  - One is the successor of zero and can be constructed: `+1 (+0 (*) (*) Nat) (*) Nat`
+
+
+List:
+```
+List
+ μ(→KIND KIND) (ΛKIND (+(*) (*?0 (/@% ?0)))) 
+```
+- List is a sequence of types that may be empty.
+- List is recursive and takes a type variable of it's contained values.
+  - Its kind is `->KIND KIND`.
+  - It takes its type parameter with `ΛKIND ...`.
+  - It refers to it's type parameter with `?0`.
+  - It refers to itself with `%`
+  - It applys itself to it's type parameter with `/@.. ..`.
+
+### Recursive Mu Types
+Mu types allow a type to refer to itself by use of self-bindings (`%`).
+
+**Examples:**
+
+A Natural number type:
+```
+μ(KIND) (+(*) %)
+```
+- A Natural number has kind `KIND` and is an empty sum (representing zero) or a
+  successor of another Natural number.
+
+### Self Bindings
+A type which is contained within a Mu type can refer to itself with `%`.
+
+**Examples:**
+
+A Natural number type:
+```
+μ(KIND) (+(*) %)
+```
+- `%` refers to the type as a whole, starting at the `μ`.
 
 ### Type Binding
 Refer to _types_ bound by a big lambda expression or a type lambda.
