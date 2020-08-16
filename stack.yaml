@@ -9,6 +9,7 @@ packages:
 - Printer
 - Repl/Lib
 - Repl/Terminal
+- Repl/CLI
 extra-deps:
 - git: https://github.com/syallop/Reversible
   commit: 84188a89af962716dc0534d552da715305cb0cf5
