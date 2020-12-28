@@ -22,3 +22,9 @@
 [submodule "PLEditor"]
 	path = Editor
 	url = https://github.com/syallop/PLEditor
+[submodule "Hash"]
+	path = Hash
+	url = https://github.com/syallop/PLHash
+[submodule "Store"]
+	path = Store
+	url = https://github.com/syallop/PLStore

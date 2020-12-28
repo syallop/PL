@@ -3,18 +3,30 @@ packages:
 - Core
 - Editor
 - Grammar
+- Hash
 - Label
 - Lispy
 - Parser
 - Printer
+- Repl/CLI
 - Repl/Lib
 - Repl/Terminal
-- Repl/CLI
+- Store/DHT
+- Store/File
+- Store/Memory
+- Store/Nested
+- Store/Hash
+- Store/Store
 extra-deps:
 - git: https://github.com/syallop/Reversible
   commit: 84188a89af962716dc0534d552da715305cb0cf5
 - git: https://github.com/syallop/DSL-Compose
   commit: 5a95ae855f3291aa3193a7424892035226b10d2f
+- git: https://github.com/syallop/DHT
+  commit: a376cf5a423f50212cfd856dcf733eb5177fc00c
+  subdirs:
+    - .
+    - Examples/DHT-SimpleNode
 - hedgehog-quickcheck-0.1.1
 - brick-0.46
 - config-ini-0.2.4.0
