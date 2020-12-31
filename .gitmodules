@@ -28,3 +28,12 @@
 [submodule "Store"]
 	path = Store
 	url = https://github.com/syallop/PLStore
+[submodule "DHT"]
+	path = DHT
+	url = https://github.com/syallop/DHT
+[submodule "Reversible"]
+	path = Reversible
+	url = https://github.com/syallop/Reversible
+[submodule "DSL-Compose"]
+	path = DSL-Compose
+	url = https://github.com/syallop/DSL-Compose
